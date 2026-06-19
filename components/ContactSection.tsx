@@ -12,7 +12,6 @@ export default function ContactSection() {
   const socials = [
     { icon: GithubIcon, label: "GitHub",     href: siteConfig.github,   rose: false },
     { icon: LinkedinIcon, label: "LinkedIn", href: siteConfig.linkedin, rose: true  },
-    { icon: XIcon, label: "Twitter / X",     href: siteConfig.twitter,  rose: false },
   ];
 
   return (
