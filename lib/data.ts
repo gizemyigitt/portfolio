@@ -10,7 +10,7 @@ export const siteConfig = {
     tr: "Bilgisayar Mühendisliği altyapısına sahip, SAP ABAP alanında uzmanlaşmış yazılım geliştirici. Kurumsal ERP projelerinde finans, tedarik zinciri ve satış süreçlerine yönelik ölçeklenebilir çözümler geliştiriyorum.",
     en: "Computer Engineering graduate specialising in SAP ABAP development. I build scalable enterprise ERP solutions across finance, supply chain, and sales processes.",
   },
-  email: "gizem.y1883@gmail.com",
+  email: "muh.gizemyigit@gmail.com",
   github: "https://github.com/gizemyigitt",
   linkedin: "https://www.linkedin.com/in/gizem-yigit-5a0257192",
   twitter: "https://twitter.com/gizemyigitt",

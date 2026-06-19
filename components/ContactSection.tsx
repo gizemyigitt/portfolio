@@ -1,18 +1,46 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { siteConfig } from "@/lib/data";
 import { useLang } from "@/components/LanguageContext";
-import { Mail, Send } from "lucide-react";
-import { GithubIcon, LinkedinIcon, XIcon } from "@/components/SocialIcons";
+import { Mail, Send, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { GithubIcon, LinkedinIcon } from "@/components/SocialIcons";
+
+type Status = "idle" | "loading" | "success" | "error";
 
 export default function ContactSection() {
   const { t } = useLang();
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
 
   const socials = [
-    { icon: GithubIcon, label: "GitHub",     href: siteConfig.github,   rose: false },
+    { icon: GithubIcon, label: "GitHub",   href: siteConfig.github,   rose: false },
     { icon: LinkedinIcon, label: "LinkedIn", href: siteConfig.linkedin, rose: true  },
   ];
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || !message.trim()) return;
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, message }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        setName("");
+        setMessage("");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  }
 
   return (
     <section id="iletisim" className="py-28 px-6" style={{ background: "var(--sage-faint)" }}>
@@ -83,40 +111,46 @@ export default function ContactSection() {
 
           {/* Right: form */}
           <motion.form
+            onSubmit={handleSubmit}
             initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.6 }}
-            action={`mailto:${siteConfig.email}`}
-            method="get"
             className="border rounded-2xl p-6 space-y-4"
             style={{ background: "var(--bg-card-sage)", borderColor: "var(--border-sage)" }}
           >
-            {[
-              { label: t("contact_name_label"), name: "subject", placeholder: t("contact_name_ph"), multiline: false },
-            ].map(({ label, name, placeholder }) => (
-              <div key={name}>
-                <label className="block text-xs uppercase tracking-wider mb-2"
-                  style={{ color: "var(--fg-subtle)", fontFamily: "var(--font-dm-sans)" }}>
-                  {label}
-                </label>
-                <input type="text" name={name} placeholder={placeholder}
-                  className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors"
-                  style={{
-                    background: "var(--bej-faint)",
-                    borderColor: "var(--border)",
-                    color: "var(--fg)",
-                    fontFamily: "var(--font-dm-sans)",
-                  }}
-                  onFocus={e => (e.currentTarget.style.borderColor = "var(--sage)")}
-                  onBlur={e  => (e.currentTarget.style.borderColor = "var(--border)")}
-                />
-              </div>
-            ))}
+            <div>
+              <label className="block text-xs uppercase tracking-wider mb-2"
+                style={{ color: "var(--fg-subtle)", fontFamily: "var(--font-dm-sans)" }}>
+                {t("contact_name_label")}
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder={t("contact_name_ph")}
+                required
+                className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors"
+                style={{
+                  background: "var(--bej-faint)",
+                  borderColor: "var(--border)",
+                  color: "var(--fg)",
+                  fontFamily: "var(--font-dm-sans)",
+                }}
+                onFocus={e => (e.currentTarget.style.borderColor = "var(--sage)")}
+                onBlur={e  => (e.currentTarget.style.borderColor = "var(--border)")}
+              />
+            </div>
+
             <div>
               <label className="block text-xs uppercase tracking-wider mb-2"
                 style={{ color: "var(--fg-subtle)", fontFamily: "var(--font-dm-sans)" }}>
                 {t("contact_msg_label")}
               </label>
-              <textarea name="body" rows={4} placeholder={t("contact_msg_ph")}
+              <textarea
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+                rows={4}
+                placeholder={t("contact_msg_ph")}
+                required
                 className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors resize-none"
                 style={{
                   background: "var(--bej-faint)",
@@ -128,14 +162,36 @@ export default function ContactSection() {
                 onBlur={e  => (e.currentTarget.style.borderColor = "var(--border)")}
               />
             </div>
-            <button type="submit"
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium text-sm transition-all duration-200 hover:opacity-85 text-white"
+
+            {status === "success" && (
+              <div className="flex items-center gap-2 text-sm rounded-xl px-4 py-3"
+                style={{ background: "var(--sage-faint)", color: "var(--sage-bright)", border: "1px solid var(--border-sage)" }}>
+                <CheckCircle className="w-4 h-4 shrink-0" />
+                <span style={{ fontFamily: "var(--font-dm-sans)" }}>Mesajın iletildi, teşekkürler!</span>
+              </div>
+            )}
+
+            {status === "error" && (
+              <div className="flex items-center gap-2 text-sm rounded-xl px-4 py-3"
+                style={{ background: "var(--rose-faint)", color: "var(--rose-bright)", border: "1px solid var(--border-rose)" }}>
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span style={{ fontFamily: "var(--font-dm-sans)" }}>Bir hata oluştu, tekrar dene.</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium text-sm transition-all duration-200 hover:opacity-85 text-white disabled:opacity-60"
               style={{
                 background: "linear-gradient(135deg, var(--sage), var(--rose))",
                 fontFamily: "var(--font-dm-sans)",
-              }}>
-              <Send className="w-4 h-4" />
-              {t("contact_send")}
+              }}
+            >
+              {status === "loading"
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> Gönderiliyor...</>
+                : <><Send className="w-4 h-4" /> {t("contact_send")}</>
+              }
             </button>
           </motion.form>
         </div>
