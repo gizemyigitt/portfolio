@@ -12,7 +12,7 @@ export const siteConfig = {
   },
   email: "gizem.y1883@gmail.com",
   github: "https://github.com/gizemyigitt",
-  linkedin: "https://linkedin.com/in/gizemyigit-5a0257192",
+  linkedin: "https://www.linkedin.com/in/gizem-yigit-5a0257192/",
   twitter: "https://twitter.com/gizemyigitt",
 };
 
