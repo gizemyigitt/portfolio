@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { siteConfig } from "@/lib/data";
 import { useLang } from "@/components/LanguageContext";
 import { Menu, X, Sparkles } from "lucide-react";
@@ -10,6 +11,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { lang, setLang, t } = useLang();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const prefix = isHome ? "" : "/";
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
@@ -18,12 +22,12 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { href: "#hakkimda",  label: t("nav_about")    },
-    { href: "#deneyim",   label: t("nav_exp")      },
-    { href: "#beceriler", label: t("nav_skills")   },
-    { href: "#projeler",  label: t("nav_projects") },
-    { href: "#blog",      label: t("nav_blog")     },
-    { href: "#iletisim",  label: t("nav_contact")  },
+    { href: `${prefix}#hakkimda`,  label: t("nav_about")    },
+    { href: `${prefix}#deneyim`,   label: t("nav_exp")      },
+    { href: `${prefix}#beceriler`, label: t("nav_skills")   },
+    { href: `${prefix}#projeler`,  label: t("nav_projects") },
+    { href: `${prefix}#blog`,      label: t("nav_blog")     },
+    { href: `${prefix}#iletisim`,  label: t("nav_contact")  },
   ];
 
   return (
@@ -45,7 +49,7 @@ export default function Navbar() {
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-7">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-sm transition-colors duration-200"
@@ -54,7 +58,7 @@ export default function Navbar() {
               onMouseLeave={e => (e.currentTarget.style.color = "var(--fg-muted)")}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -104,7 +108,7 @@ export default function Navbar() {
           style={{ background: "rgba(17,14,11,0.96)", borderColor: "var(--border)" }}
         >
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="block text-sm py-1 transition-colors"
@@ -112,7 +116,7 @@ export default function Navbar() {
               onClick={() => setMenuOpen(false)}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
           <button
             onClick={() => setLang(lang === "tr" ? "en" : "tr")}
