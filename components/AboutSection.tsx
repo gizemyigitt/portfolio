@@ -14,6 +14,8 @@ export default function AboutSection() {
     { icon: GraduationCap, label: t("about_edu_label"),   value: t("about_edu"),   rose: false },
   ];
 
+  const techChips = ["SAP ABAP", "CDS Views", "OData", "BAPI / RFC", "ALV Raporlama", "Smart Forms", "ERP Süreçleri"];
+
   return (
     <section id="hakkimda" className="py-28 px-6">
       <div className="max-w-6xl mx-auto">
@@ -48,7 +50,7 @@ export default function AboutSection() {
 
             {/* Highlight chips */}
             <div className="flex flex-wrap gap-2 pt-1">
-              {["React & Next.js", "TypeScript", "Binance API", "PostgreSQL", "Docker"].map((tag, i) => (
+              {techChips.map((tag, i) => (
                 <span key={tag} className="text-xs border px-3 py-1 rounded-full"
                   style={{
                     color: i % 2 === 0 ? "var(--rose-bright)" : "var(--sage-bright)",

@@ -1,32 +1,83 @@
 import { Lang } from "@/lib/i18n";
 
 export const siteConfig = {
-  name: "Ad Soyad",
+  name: "Gizem Seferoğlu",
   title: {
-    tr: "Full Stack Developer",
-    en: "Full Stack Developer",
+    tr: "SAP ABAP Yazılım Geliştirici",
+    en: "SAP ABAP Software Developer",
   },
   bio: {
-    tr: "Modern web uygulamaları ve veri odaklı projeler geliştiriyorum. Özellikle fintech ve kripto alanındaki ürünlere ilgi duyuyorum.",
-    en: "I build modern web applications and data-driven projects, with a special interest in fintech and crypto products.",
+    tr: "Bilgisayar Mühendisliği altyapısına sahip, SAP ABAP alanında uzmanlaşmış yazılım geliştirici. Kurumsal ERP projelerinde finans, tedarik zinciri ve satış süreçlerine yönelik ölçeklenebilir çözümler geliştiriyorum.",
+    en: "Computer Engineering graduate specialising in SAP ABAP development. I build scalable enterprise ERP solutions across finance, supply chain, and sales processes.",
   },
-  email: "ornek@email.com",
-  github: "https://github.com/kullanici",
-  linkedin: "https://linkedin.com/in/kullanici",
-  twitter: "https://twitter.com/kullanici",
+  email: "gizem.y1883@gmail.com",
+  github: "https://github.com/gizemyigitt",
+  linkedin: "https://linkedin.com/in/gizemyigit-5a0257192",
+  twitter: "https://twitter.com/gizemyigitt",
 };
 
+export const experiences = [
+  {
+    id: "vitycode",
+    title:   { tr: "SAP ABAP Yazılım Geliştirici",  en: "SAP ABAP Software Developer"    },
+    company: "VityCode Danışmanlık",
+    period:  { tr: "Nis 2024 — Oca 2026",            en: "Apr 2024 — Jan 2026"            },
+    bullets: {
+      tr: [
+        "Farklı sektörlerdeki büyük ölçekli kurumların ERP dönüşüm ve geliştirme projelerinde aktif rol üstlendi",
+        "Finans, tedarik zinciri, satış, bakım ve kalite süreçlerine yönelik kurumsal ABAP uygulamaları geliştirdi",
+        "RFC/BAPI tabanlı entegrasyon çözümleri, OData/CDS View servisleri ve ALV raporlama altyapıları kurdu",
+        "Smart Forms ve SAPscript ile doküman yönetimi; e-dönüşüm uygulamaları hayata geçirdi",
+        "Hata analizi ve debugging yoluyla sistem performansını iyileştirdi",
+      ],
+      en: [
+        "Took an active role in ERP transformation and development projects for large-scale enterprises across multiple sectors",
+        "Developed corporate ABAP applications for finance, supply chain, sales, maintenance, and quality processes",
+        "Built RFC/BAPI-based integration solutions, OData/CDS View services, and ALV reporting infrastructure",
+        "Implemented document management with Smart Forms & SAPscript; delivered e-transformation applications",
+        "Improved system performance through error analysis and debugging",
+      ],
+    },
+  },
+  {
+    id: "besler",
+    title:   { tr: "Yazılım Destek Sorumlusu",       en: "Software Support Specialist"    },
+    company: "Besler Group",
+    period:  { tr: "Ara 2023 — Nis 2024",             en: "Dec 2023 — Apr 2024"            },
+    bullets: {
+      tr: [
+        "İş birimlerinden gelen talepler doğrultusunda hata analizi, süreç iyileştirme ve teknik destek çalışmaları yürüttü",
+        "SAP sistemlerinde kullanıcı sorunlarını tespit edip çözdü; iş sürekliliğini destekledi",
+      ],
+      en: [
+        "Performed error analysis, process improvement, and technical support based on business unit requests",
+        "Identified and resolved user issues in SAP systems, supporting business continuity",
+      ],
+    },
+  },
+];
+
 export const skills = [
-  { name: "TypeScript",       level: 90, category: { tr: "Dil",        en: "Language"  } },
-  { name: "React / Next.js",  level: 92, category: { tr: "Frontend",   en: "Frontend"  } },
-  { name: "TailwindCSS",      level: 88, category: { tr: "Frontend",   en: "Frontend"  } },
-  { name: "Node.js",          level: 80, category: { tr: "Backend",    en: "Backend"   } },
-  { name: "Python",           level: 75, category: { tr: "Dil",        en: "Language"  } },
-  { name: "PostgreSQL",       level: 72, category: { tr: "Veritabanı", en: "Database"  } },
-  { name: "Redis",            level: 65, category: { tr: "Veritabanı", en: "Database"  } },
-  { name: "Docker",           level: 68, category: { tr: "DevOps",     en: "DevOps"    } },
-  { name: "Git",              level: 90, category: { tr: "Araç",       en: "Tool"      } },
-  { name: "REST API",         level: 88, category: { tr: "Backend",    en: "Backend"   } },
+  { name: "SAP ABAP",           level: 92, category: { tr: "SAP Core",   en: "SAP Core"   } },
+  { name: "BAPI / RFC",         level: 85, category: { tr: "SAP Core",   en: "SAP Core"   } },
+  { name: "CDS Views",          level: 80, category: { tr: "SAP Core",   en: "SAP Core"   } },
+  { name: "OData",              level: 76, category: { tr: "Entegrasyon", en: "Integration"} },
+  { name: "ALV Raporlama",      level: 88, category: { tr: "Raporlama",  en: "Reporting"  } },
+  { name: "Smart Forms",        level: 80, category: { tr: "Doküman",    en: "Document"   } },
+  { name: "Dialog Programming", level: 74, category: { tr: "ABAP",       en: "ABAP"       } },
+  { name: "SQL",                level: 72, category: { tr: "Veritabanı", en: "Database"   } },
+  { name: "Debugging",          level: 88, category: { tr: "Araç",       en: "Tool"       } },
+  { name: "ERP Süreçleri",      level: 82, category: { tr: "Domain",     en: "Domain"     } },
+];
+
+export const certifications = [
+  { name: "SAP ABAP Bootcamp",    issuer: "Renova Consulting" },
+  { name: "Agile Development Day", issuer: "Coderspace"      },
+];
+
+export const languages = [
+  { name: { tr: "Türkçe",    en: "Turkish" },  level: 5 },
+  { name: { tr: "İngilizce", en: "English" },  level: 3 },
 ];
 
 export const projects = [
@@ -35,14 +86,14 @@ export const projects = [
     title: "Crypto Hype Scanner",
     description: {
       tr: "Binance ve CoinGecko verilerini birleştirerek hacim, trend ve volatilite skorlarına göre kripto paraları sıralayan real-time dashboard.",
-      en: "A real-time dashboard that combines Binance and CoinGecko data to rank cryptocurrencies by volume, trend, and volatility scores.",
+      en: "A real-time dashboard combining Binance and CoinGecko data to rank cryptocurrencies by volume, trend, and volatility scores.",
     },
     longDescription: {
       tr: "Binance 24h ticker verileri ile CoinGecko trending endpoint'ini harmanlayan bu proje, Volume %50 + Trending %30 + Volatility %20 ağırlıklı bir skorlama algoritması kullanıyor. SWR ile 30 saniyelik otomatik yenileme mevcut.",
       en: "This project blends Binance 24h ticker data with the CoinGecko trending endpoint using a weighted scoring algorithm: Volume 50% + Trending 30% + Volatility 20%. Auto-refresh every 30 seconds via SWR.",
     },
     tech: ["Next.js 16", "TypeScript", "TailwindCSS", "SWR", "Binance API", "CoinGecko API"],
-    github: "https://github.com/kullanici/crypto-hype-scanner",
+    github: "https://github.com/gizemyigitt/crypto-hype-scanner",
     demo: null,
     featured: true,
     status: "active",
@@ -52,37 +103,19 @@ export const projects = [
     id: "portfolio-site",
     title: "Portfolio & Blog",
     description: {
-      tr: "Next.js 16 App Router ile oluşturulmuş kişisel portfolyo ve teknik blog sitesi. Framer Motion animasyonları ve tam responsive tasarım.",
-      en: "Personal portfolio and technical blog built with Next.js 16 App Router, Framer Motion animations, and fully responsive design.",
+      tr: "Next.js 16 App Router ile oluşturulmuş kişisel portfolyo ve teknik blog sitesi.",
+      en: "Personal portfolio and technical blog built with Next.js 16 App Router.",
     },
     longDescription: {
-      tr: "Bu sitenin kendisi. Next.js 16'nın App Router mimarisi, TailwindCSS v4, Framer Motion animasyonları kullanılarak sıfırdan inşa edildi.",
-      en: "This very site. Built from scratch using Next.js 16 App Router architecture, TailwindCSS v4, and Framer Motion animations.",
+      tr: "Bu sitenin kendisi. Next.js 16 App Router, TailwindCSS v4, Framer Motion ve TR/EN dil desteği ile sıfırdan inşa edildi.",
+      en: "This very site. Built from scratch with Next.js 16 App Router, TailwindCSS v4, Framer Motion, and full TR/EN i18n support.",
     },
     tech: ["Next.js 16", "TypeScript", "TailwindCSS", "Framer Motion"],
-    github: "https://github.com/kullanici/portfolio",
-    demo: "https://portfoliom.com",
+    github: "https://github.com/gizemyigitt/portfolio",
+    demo: "https://gizemyigitt.vercel.app",
     featured: true,
     status: "active",
     year: 2026,
-  },
-  {
-    id: "task-manager-api",
-    title: "Task Manager REST API",
-    description: {
-      tr: "JWT kimlik doğrulama, role tabanlı yetkilendirme ve PostgreSQL ile tam featured bir görev yönetim API'si.",
-      en: "A full-featured task management API with JWT auth, role-based authorization, and PostgreSQL.",
-    },
-    longDescription: {
-      tr: "Express.js + TypeScript ile yazılmış, Prisma ORM kullanan, Redis cache entegrasyonu olan, Docker ile containerize edilmiş bir REST API projesi.",
-      en: "A REST API written in Express.js + TypeScript, using Prisma ORM, Redis cache integration, and containerized with Docker.",
-    },
-    tech: ["Node.js", "Express", "TypeScript", "PostgreSQL", "Prisma", "Redis", "Docker"],
-    github: "https://github.com/kullanici/task-manager-api",
-    demo: null,
-    featured: false,
-    status: "completed",
-    year: 2025,
   },
 ];
 
@@ -94,19 +127,13 @@ export const blogPosts = [
       en: "How to Build a Crypto Dashboard with Binance API",
     },
     excerpt: {
-      tr: "Binance'in WebSocket ve REST API'larını kullanarak real-time fiyat ve hacim verisi çeken bir Next.js dashboard'u sıfırdan inşa ediyoruz.",
-      en: "We build a Next.js dashboard from scratch that pulls real-time price and volume data using Binance REST and WebSocket APIs.",
+      tr: "Binance REST API'sını kullanarak real-time fiyat ve hacim verisi çeken bir Next.js dashboard'u sıfırdan inşa ediyoruz.",
+      en: "We build a Next.js dashboard from scratch that pulls real-time price and volume data using the Binance REST API.",
     },
     content: `
 ## Giriş
 
-Binance, geliştiriciler için kapsamlı bir API sunar. Bu yazıda hem REST hem de WebSocket endpoint'lerini kullanarak kripto verilerini çeken bir Next.js uygulaması oluşturacağız.
-
-## Gereksinimler
-
-- Node.js 18+
-- Next.js 14+
-- Binance API anahtarı (sadece okuma izniyle yeterli)
+Binance, geliştiriciler için kapsamlı bir API sunar. Bu yazıda REST endpoint'lerini kullanarak kripto verilerini çeken bir Next.js uygulaması oluşturacağız.
 
 ## 1. API Route Oluşturma
 
@@ -124,8 +151,6 @@ export async function GET() {
 
 ## 2. SWR ile Real-Time Güncelleme
 
-SWR kütüphanesi ile her 30 saniyede otomatik yenileme:
-
 \`\`\`typescript
 import useSWR from 'swr';
 
@@ -139,8 +164,6 @@ export function useTicker() {
 \`\`\`
 
 ## 3. Veriyi Filtrelemek ve Sıralamak
-
-Binance 1500+ çifti döndürür. Sadece USDT çiftlerini alıp hacime göre sıralıyoruz:
 
 \`\`\`typescript
 const filtered = data
@@ -166,8 +189,8 @@ Bu yapıyla dakikalar içinde çalışan bir kripto dashboard'u oluşturabilirsi
       en: "Next.js App Router: Server vs Client Components",
     },
     excerpt: {
-      tr: "Server Components ve Client Components arasındaki farkı, ne zaman hangisini kullanacağınızı ve sık yapılan hataları ele alıyoruz.",
-      en: "We cover the difference between Server and Client Components, when to use each, and common mistakes.",
+      tr: "Server Components ve Client Components arasındaki farkı, ne zaman hangisini kullanacağınızı ele alıyoruz.",
+      en: "We cover the difference between Server and Client Components and when to use each.",
     },
     content: `
 ## Server Components Neden Önemli?
@@ -206,8 +229,8 @@ Server/Client ayrımını doğru yapmak hem performansı artırır hem de bundle
   {
     slug: "typescript-scoring-algoritmasi",
     title: {
-      tr: "TypeScript ile Tip Güvenli Scoring Algoritması Tasarımı",
-      en: "Designing a Type-Safe Scoring Algorithm with TypeScript",
+      tr: "TypeScript ile Tip Güvenli Scoring Algoritması",
+      en: "Type-Safe Scoring Algorithm with TypeScript",
     },
     excerpt: {
       tr: "Crypto Hype Scanner projesinde kullandığım çok faktörlü scoring algoritmasını nasıl tasarladığımı anlatıyorum.",
@@ -227,14 +250,6 @@ interface ScoringWeights {
   volatility: number;
 }
 
-interface ScoredCoin extends CoinData {
-  score: number;
-}
-\`\`\`
-
-## Normalizasyon
-
-\`\`\`typescript
 function normalize(value: number, min: number, max: number): number {
   if (max === min) return 0;
   return Math.min(100, Math.max(0, ((value - min) / (max - min)) * 100));
@@ -290,8 +305,10 @@ SWR, kripto gibi sık değişen veri için idealdir.
   },
 ];
 
-export type Project = typeof projects[number];
-export type BlogPost = typeof blogPosts[number];
+export type Experience = typeof experiences[number];
+export type Project    = typeof projects[number];
+export type BlogPost   = typeof blogPosts[number];
+
 export function getLang<T>(obj: { tr: T; en: T }, lang: Lang): T {
   return obj[lang];
 }

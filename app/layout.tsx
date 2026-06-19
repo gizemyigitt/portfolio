@@ -26,10 +26,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.name} — ${siteConfig.title.tr}`,
-    template: `%s | ${siteConfig.name}`,
+    default: "Gizem Seferoğlu — SAP ABAP Yazılım Geliştirici",
+    template: `%s | Gizem Seferoğlu`,
   },
-  description: siteConfig.bio.tr,
+  description: "Bilgisayar Mühendisliği altyapısına sahip SAP ABAP yazılım geliştirici. ERP entegrasyonları, CDS Views, OData, BAPI/RFC.",
 };
 
 export default function RootLayout({

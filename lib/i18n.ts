@@ -4,6 +4,7 @@ export const ui = {
   tr: {
     // Nav
     nav_about: "Hakkımda",
+    nav_exp: "Deneyim",
     nav_skills: "Beceriler",
     nav_projects: "Projeler",
     nav_blog: "Blog",
@@ -20,14 +21,14 @@ export const ui = {
     about_avail_label: "Müsaitlik",
     about_edu_label: "Eğitim",
     about_loc: "Türkiye",
-    about_exp: "3+ Yıl",
-    about_avail: "Freelance & Tam Zamanlı",
-    about_edu: "Bilgisayar Mühendisliği",
+    about_exp: "2 Yıl",
+    about_avail: "Tam Zamanlı",
+    about_edu: "Sakarya Üniversitesi · Bilgisayar Mühendisliği",
     about_cv: "CV'yi İndir ↓",
-    about_p1: "Full stack web geliştirme konusunda deneyim sahibiyim. Özellikle React & Next.js ekosistemi, TypeScript ile tip güvenli geliştirme ve gerçek zamanlı veri entegrasyonlarına odaklanıyorum.",
-    about_p2: "Kripto ve fintech alanındaki projelere özellikle ilgi duyuyorum. Binance, CoinGecko gibi finansal API'larla çalışma ve kullanıcı dostu dashboard'lar oluşturma konusunda deneyim kazandım.",
-    about_highlight1: "React & Next.js",
-    about_highlight2: "TypeScript",
+    about_p1: "Bilgisayar Mühendisliği altyapısına sahip, SAP ABAP alanında uzmanlaşmış yazılım geliştiriciyim. Büyük ölçekli kurumsal ERP projelerinde finans, tedarik zinciri, satış, bakım ve kalite süreçlerine yönelik çözümler geliştirme konusunda kanıtlanmış deneyimim var.",
+    about_p2: "Entegrasyon mimarileri, raporlama altyapıları ve e-dönüşüm uygulamalarında güçlü teknik yetkinliğe sahibim. Sürdürülebilir ve ölçeklenebilir kurumsal yazılım ekosistemleri inşa etmeye odaklanıyorum.",
+    about_highlight1: "SAP ABAP",
+    about_highlight2: "ERP",
     // Skills
     skills_label: "✦ Beceriler",
     skills_title: "Teknik Yetkinlikler",
@@ -61,12 +62,16 @@ export const ui = {
     contact_msg_label: "Mesaj",
     contact_msg_ph: "Merhaba, sizinle görüşmek istiyorum...",
     contact_send: "Mesaj Gönder",
+    // Experience
+    exp_label: "✦ İş Deneyimi",
+    exp_title: "Kariyer",
     // Footer
     footer_credit: "Next.js 16 · Tailwind · Framer Motion · Playfair Display",
   },
   en: {
     // Nav
     nav_about: "About",
+    nav_exp: "Experience",
     nav_skills: "Skills",
     nav_projects: "Projects",
     nav_blog: "Blog",
@@ -83,14 +88,14 @@ export const ui = {
     about_avail_label: "Availability",
     about_edu_label: "Education",
     about_loc: "Turkey",
-    about_exp: "3+ Years",
-    about_avail: "Freelance & Full-time",
-    about_edu: "Computer Engineering",
+    about_exp: "2 Years",
+    about_avail: "Full-time",
+    about_edu: "Sakarya University · Computer Engineering",
     about_cv: "Download CV ↓",
-    about_p1: "I have experience in full stack web development, focusing on the React & Next.js ecosystem, type-safe development with TypeScript, and real-time data integrations.",
-    about_p2: "I'm especially drawn to crypto and fintech projects. I've built experience working with financial APIs like Binance and CoinGecko to create user-friendly dashboards.",
-    about_highlight1: "React & Next.js",
-    about_highlight2: "TypeScript",
+    about_p1: "I'm a Computer Engineering graduate specialising in SAP ABAP development. I have proven experience delivering enterprise ERP solutions across finance, supply chain, sales, maintenance, and quality processes.",
+    about_p2: "I bring strong expertise in integration architectures, reporting infrastructure, and e-transformation applications, with a focus on building sustainable and scalable enterprise software ecosystems.",
+    about_highlight1: "SAP ABAP",
+    about_highlight2: "ERP",
     // Skills
     skills_label: "✦ Skills",
     skills_title: "Technical Expertise",
@@ -124,6 +129,9 @@ export const ui = {
     contact_msg_label: "Message",
     contact_msg_ph: "Hello, I'd like to connect with you...",
     contact_send: "Send Message",
+    // Experience
+    exp_label: "✦ Experience",
+    exp_title: "Career",
     // Footer
     footer_credit: "Next.js 16 · Tailwind · Framer Motion · Playfair Display",
   },

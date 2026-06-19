@@ -19,6 +19,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: "#hakkimda",  label: t("nav_about")    },
+    { href: "#deneyim",   label: t("nav_exp")      },
     { href: "#beceriler", label: t("nav_skills")   },
     { href: "#projeler",  label: t("nav_projects") },
     { href: "#blog",      label: t("nav_blog")     },

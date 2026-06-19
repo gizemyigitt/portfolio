@@ -1,5 +1,6 @@
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
+import ExperienceSection from "@/components/ExperienceSection";
 import SkillsSection from "@/components/SkillsSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import BlogPreviewSection from "@/components/BlogPreviewSection";
@@ -10,6 +11,7 @@ export default function Home() {
     <>
       <HeroSection />
       <AboutSection />
+      <ExperienceSection />
       <SkillsSection />
       <ProjectsSection />
       <BlogPreviewSection />
