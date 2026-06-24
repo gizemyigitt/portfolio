@@ -407,7 +407,7 @@ Search Help Exit, standart arama yardımlarını projeye özgü iş kurallarına
     tags: ["SAP ABAP", "Search Help", "Function Module", "Dialog"],
     readTime: 6,
     publishedAt: "2026-06-24",
-    coverImage: "/blog/search-help-exit/search-help-exit-tanim.jpeg",
+    coverImage: undefined,
   },
 ];
 
