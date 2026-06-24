@@ -6,6 +6,21 @@ import { useLang } from "@/components/LanguageContext";
 import { Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/SocialIcons";
 
+function openEmail(e: React.MouseEvent<HTMLAnchorElement>) {
+  e.preventDefault();
+  const email = siteConfig.email;
+  let opened = false;
+  const onBlur = () => { opened = true; };
+  window.addEventListener("blur", onBlur, { once: true });
+  window.location.href = `mailto:${email}`;
+  setTimeout(() => {
+    window.removeEventListener("blur", onBlur);
+    if (!opened) {
+      window.open(`https://mail.google.com/mail/?view=cm&to=${email}`, "_blank");
+    }
+  }, 600);
+}
+
 export default function ContactSection() {
   const { t } = useLang();
 
@@ -16,6 +31,7 @@ export default function ContactSection() {
       value: siteConfig.email,
       href: `mailto:${siteConfig.email}`,
       rose: true,
+      onClick: openEmail,
     },
     {
       icon: GithubIcon,
@@ -23,6 +39,7 @@ export default function ContactSection() {
       value: "gizemyigitt",
       href: siteConfig.github,
       rose: false,
+      onClick: undefined,
     },
     {
       icon: LinkedinIcon,
@@ -30,6 +47,7 @@ export default function ContactSection() {
       value: "gizem-yigit",
       href: siteConfig.linkedin,
       rose: true,
+      onClick: undefined,
     },
   ];
 
@@ -57,10 +75,11 @@ export default function ContactSection() {
         </motion.div>
 
         <div className="space-y-4">
-          {contacts.map(({ icon: Icon, label, value, href, rose }, i) => (
+          {contacts.map(({ icon: Icon, label, value, href, rose, onClick }, i) => (
             <motion.a
               key={label}
               href={href}
+              onClick={onClick}
               target={href.startsWith("mailto") ? undefined : "_blank"}
               rel="noopener noreferrer"
               initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
