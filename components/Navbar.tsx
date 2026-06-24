@@ -80,16 +80,6 @@ export default function Navbar() {
             <span style={{ opacity: lang === "en" ? 1 : 0.45 }}>EN</span>
           </button>
 
-          <a
-            href="#iletisim"
-            className="text-sm px-4 py-1.5 rounded-full font-medium text-white transition-all duration-200 hover:opacity-85"
-            style={{
-              background: "linear-gradient(135deg, var(--rose), var(--mauve))",
-              fontFamily: "var(--font-dm-sans)",
-            }}
-          >
-            {t("nav_contact")}
-          </a>
         </div>
 
         <button
