@@ -180,7 +180,7 @@ Bu yapıyla dakikalar içinde çalışan bir kripto dashboard'u oluşturabilirsi
     `,
     tags: ["Next.js", "TypeScript", "Binance API", "SWR"],
     readTime: 8,
-    publishedAt: "2025-12-15",
+    publishedAt: "2026-06-20",
   },
   {
     slug: "nextjs-server-vs-client-components",
@@ -224,7 +224,7 @@ Server/Client ayrımını doğru yapmak hem performansı artırır hem de bundle
     `,
     tags: ["Next.js", "React", "Server Components"],
     readTime: 6,
-    publishedAt: "2025-11-28",
+    publishedAt: "2026-06-17",
   },
   {
     slug: "typescript-scoring-algoritmasi",
@@ -262,7 +262,7 @@ Tip güvenli scoring algoritmaları, hataları runtime yerine compile-time'da ya
     `,
     tags: ["TypeScript", "Algoritma", "Kripto"],
     readTime: 7,
-    publishedAt: "2025-11-10",
+    publishedAt: "2026-06-11",
   },
   {
     slug: "swr-ile-realtime-veri-senkronizasyonu",
@@ -301,7 +301,110 @@ SWR, kripto gibi sık değişen veri için idealdir.
     `,
     tags: ["SWR", "React", "Next.js", "Performance"],
     readTime: 9,
-    publishedAt: "2025-10-22",
+    publishedAt: "2026-06-05",
+  },
+  {
+    slug: "search-help-exit-ile-dinamik-filtreleme",
+    title: {
+      tr: "Search Help Exit ile Dinamik Filtreleme ve Otomatik Gösterim",
+      en: "Dynamic Filtering and Auto-Display with Search Help Exit",
+    },
+    excerpt: {
+      tr: "SAP ABAP'ta Search Help Exit kullanarak arama yardımını runtime'da dinamik olarak filtrelemeyi ve popup açmadan doğrudan liste göstermeyi inceliyoruz.",
+      en: "We explore how to use SAP ABAP Search Help Exit to dynamically filter search help results at runtime and display them directly without a popup.",
+    },
+    content: `
+## Giriş
+
+SAP projelerinde kullanıcıya sunulan F4 arama yardımlarını (Search Help) belirli kriterlere göre dinamik olarak filtrelemek sık karşılaşılan bir gereksinimdir. Örneğin bir sipariş ekranında, kullanıcının seçebileceği hareket kodlarının yalnızca kendi fabrikasına (WERKS) ait olanlarla sınırlandırılması gerekebilir.
+
+Bu yazıda **Search Help Exit** mekanizmasını kullanarak bu filtrelemeyi nasıl gerçekleştirdiğimi ve arama yardımının popup ekranı açmadan doğrudan liste sunmasını nasıl sağladığımı anlatıyorum.
+
+## Search Help Exit Nedir?
+
+Search Help Exit, standart bir Function Module olan **F4IF_SHLP_EXIT_MASSVARNAME**'in kopyalanmasıyla oluşturulan özel bir FM'dir. SAP, arama yardımının farklı adımlarında (SELONE, PRESEL, SELECT, DISP, vb.) bu FM'i otomatik olarak çağırır. Biz de ilgili adımı yakalayarak kayıtları manipüle edebiliriz.
+
+## Adım 1 — Search Help Tanımı
+
+Öncelikle SE11'de arama yardımı oluşturulur. Örneğimizde **ZMM_SH_MOVEMENT** adlı Search Help, **ZMMT_MOVEMENT** tablosunu selection method olarak kullanır.
+
+Exit alanına oluşturacağımız FM'in adını yazıyoruz: **FM_EXIT**
+
+Dialog tipi olarak **"Değer Sınırlamalı Diyalog"** (Dialog with value restriction) seçilmelidir — bu sayede kayıtlar FM içinde runtime'da düzenlenebilir hale gelir.
+
+Eğer popup ekranı hiç açılmadan sonuçların direkt gösterilmesi isteniyorsa **"Hemen Görüntüle"** (Immediate Display) seçeneği de işaretlenmelidir.
+
+## Adım 2 — FM_EXIT Oluşturma
+
+F4IF_SHLP_EXIT_MASSVARNAME fonksiyonu kopyalanarak **FM_EXIT** oluşturulur. Interface aynen korunur.
+
+\`\`\`abap
+FUNCTION FM_EXIT.
+*"-----------------------------------------------------------------------
+*"*"Local Interface:
+*"  TABLES
+*"      SHLP_TAB  TYPE  SHLP_DESCR_TAB_T
+*"      RECORD_TAB  STRUCTURE  SEAHLPRES
+*"  CHANGING
+*"      VALUE(SHLP)  TYPE  SHLP_DESCR_T
+*"      VALUE(CALLCONTROL)  LIKE  DDSHF4CTRL
+*"-----------------------------------------------------------------------
+
+  DATA: lv_werks  TYPE eban-werks,
+        lv_string TYPE c LENGTH 4.
+
+  IMPORT werks = lv_werks FROM MEMORY ID 'ZWERKS'.
+
+  IF callcontrol-step = 'DISP'.
+    LOOP AT record_tab.
+      lv_string = record_tab-string+23(4).
+      IF lv_string NE lv_werks.
+        DELETE record_tab.
+      ENDIF.
+    ENDLOOP.
+
+    FREE MEMORY ID 'ZWERKS'.
+  ENDIF.
+
+ENDFUNCTION.
+\`\`\`
+
+## Kodun Detayı
+
+**CALLCONTROL-STEP = 'DISP'** adımı, kayıtların ekrana basılmadan hemen önceki aşamadır. Bu adımı yakalayarak **RECORD_TAB** içindeki kayıtları manipüle edebiliriz.
+
+**RECORD_TAB-STRING** alanı, tüm arama yardımı kolonlarını art arda karakterler halinde tutar. \`+23(4)\` ifadesi, WERKS alanının bu string içindeki offset ve uzunluğunu belirtir — bu değer her Search Help tanımına göre değişir.
+
+**IMPORT ... FROM MEMORY ID** ile çağıran programın daha önce **EXPORT ... TO MEMORY ID** ile yazdığı fabrika bilgisi alınır. Bu, ekranlar arasında değer aktarmanın temiz bir yoludur.
+
+## Adım 3 — Çağıran Programda MEMORY Yazımı
+
+FM_EXIT çalışmadan önce, çağıran ABAP programında aktif WERKS değeri memory'e yazılmalıdır:
+
+\`\`\`abap
+EXPORT werks = sy-mandt TO MEMORY ID 'ZWERKS'.
+\`\`\`
+
+Ya da screen field değeriyle:
+
+\`\`\`abap
+EXPORT werks = gs_header-werks TO MEMORY ID 'ZWERKS'.
+\`\`\`
+
+## Sonuç
+
+Bu yapı sayesinde:
+
+- Kullanıcı F4 tuşuna bastığında Search Help otomatik olarak FM_EXIT'i tetikler
+- FM, DISP adımında RECORD_TAB içinden sadece ilgili fabrikaya ait hareket kodlarını bırakır
+- "Hemen Görüntüle" aktifse popup açılmadan filtrelenmiş liste direkt gösterilir
+- Memory temizlenerek veri sızıntısı önlenir
+
+Search Help Exit, standart arama yardımlarını projeye özgü iş kurallarına göre şeffaf biçimde uyarlamanın en temiz yöntemlerinden biridir.
+    `,
+    tags: ["SAP ABAP", "Search Help", "Function Module", "Dialog"],
+    readTime: 6,
+    publishedAt: "2026-06-24",
   },
 ];
 
