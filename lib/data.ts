@@ -7,8 +7,8 @@ export const siteConfig = {
     en: "Computer Engineer",
   },
   bio: {
-    tr: "Bilgisayar Mühendisliği altyapısına sahip, SAP ABAP alanında uzmanlaşmış yazılım geliştirici. Kurumsal ERP projelerinde finans, tedarik zinciri ve satış süreçlerine yönelik ölçeklenebilir çözümler geliştiriyorum.",
-    en: "Computer Engineering graduate specialising in SAP ABAP development. I build scalable enterprise ERP solutions across finance, supply chain, and sales processes.",
+    tr: "Bu siteyi hem kendime ait bir bilgi arşivi oluşturmak hem de deneyimlerimi paylaşmak için hazırladım. Burada SAP ve ABAP üzerine teknik içerikler, kariyer yolculuğumdan notlar, ilgimi çeken teknolojiler ve zaman içinde öğrendiğim küçük ipuçları bulabilirsin.\n\nKısacası, burası öğrenmeye ve gelişmeye devam eden bir yazılımcının dijital köşesi.\n\nHoş geldin.",
+    en: "I built this site to create a personal knowledge archive and share my experiences. Here you'll find technical content on SAP and ABAP, notes from my career journey, technologies that interest me, and small tips I've picked up along the way.\n\nIn short, this is the digital corner of a developer who keeps learning and growing.\n\nWelcome.",
   },
   email: "muh.gizemyigit@gmail.com",
   github: "https://github.com/gizemyigitt",

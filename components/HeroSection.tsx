@@ -47,13 +47,17 @@ export default function HeroSection() {
           <span className="gradient-text">{getLang(siteConfig.title, lang)}</span>
         </motion.div>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
-          className="text-lg max-w-2xl mx-auto mb-10 leading-relaxed"
-          style={{ color: "var(--fg-muted)", fontFamily: "var(--font-dm-sans)" }}
+          className="max-w-2xl mx-auto mb-10 space-y-3"
         >
-          {getLang(siteConfig.bio, lang)}
-        </motion.p>
+          {getLang(siteConfig.bio, lang).split("\n\n").map((para, i) => (
+            <p key={i} className="text-lg leading-relaxed"
+              style={{ color: "var(--fg-muted)", fontFamily: "var(--font-dm-sans)" }}>
+              {para}
+            </p>
+          ))}
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4 }}

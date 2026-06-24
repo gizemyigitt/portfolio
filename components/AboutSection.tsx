@@ -66,10 +66,13 @@ export default function AboutSection() {
             <div className="pt-1">
               <a
                 href="/cv.pdf"
-                className="inline-flex items-center gap-2 text-sm border px-5 py-2.5 rounded-full transition-all duration-200"
-                style={{ color: "var(--rose-bright)", borderColor: "var(--border-rose)", fontFamily: "var(--font-dm-sans)" }}
-                onMouseEnter={e => (e.currentTarget.style.background = "var(--rose-faint)")}
-                onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                download
+                className="inline-flex items-center gap-2 text-sm font-semibold px-6 py-3 rounded-full text-white transition-all duration-200 hover:opacity-85 hover:scale-[1.03]"
+                style={{
+                  background: "linear-gradient(135deg, var(--rose), var(--mauve))",
+                  fontFamily: "var(--font-dm-sans)",
+                  boxShadow: "0 4px 20px rgba(196,100,127,0.35)",
+                }}
               >
                 {t("about_cv")}
               </a>
