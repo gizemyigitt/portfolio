@@ -328,6 +328,8 @@ Search Help Exit, standart bir Function Module olan **F4IF_SHLP_EXIT_MASSVARNAME
 
 Öncelikle SE11'de arama yardımı oluşturulur. Örneğimizde **ZMM_SH_MOVEMENT** adlı Search Help, **ZMMT_MOVEMENT** tablosunu selection method olarak kullanır.
 
+![ZMM_SH_MOVEMENT Search Help tanımı — SE11](/blog/search-help-exit/search-help-exit-tanim.jpeg)
+
 Exit alanına oluşturacağımız FM'in adını yazıyoruz: **FM_EXIT**
 
 Dialog tipi olarak **"Değer Sınırlamalı Diyalog"** (Dialog with value restriction) seçilmelidir — bu sayede kayıtlar FM içinde runtime'da düzenlenebilir hale gelir.
@@ -405,7 +407,7 @@ Search Help Exit, standart arama yardımlarını projeye özgü iş kurallarına
     tags: ["SAP ABAP", "Search Help", "Function Module", "Dialog"],
     readTime: 6,
     publishedAt: "2026-06-24",
-    coverImage: "/blog/search-help-exit/cover.png",
+    coverImage: "/blog/search-help-exit/search-help-exit-tanim.jpeg",
   },
 ];
 
