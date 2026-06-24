@@ -3,8 +3,8 @@ import { Lang } from "@/lib/i18n";
 export const siteConfig = {
   name: "Gizem Seferoğlu",
   title: {
-    tr: "SAP ABAP Yazılım Geliştirici",
-    en: "SAP ABAP Software Developer",
+    tr: "Bilgisayar Mühendisi",
+    en: "Computer Engineer",
   },
   bio: {
     tr: "Bilgisayar Mühendisliği altyapısına sahip, SAP ABAP alanında uzmanlaşmış yazılım geliştirici. Kurumsal ERP projelerinde finans, tedarik zinciri ve satış süreçlerine yönelik ölçeklenebilir çözümler geliştiriyorum.",
@@ -93,7 +93,7 @@ export const projects = [
       en: "This project blends Binance 24h ticker data with the CoinGecko trending endpoint using a weighted scoring algorithm: Volume 50% + Trending 30% + Volatility 20%. Auto-refresh every 30 seconds via SWR.",
     },
     tech: ["Next.js 16", "TypeScript", "TailwindCSS", "SWR", "Binance API", "CoinGecko API"],
-    github: "https://github.com/gizemyigitt/crypto-hype-scanner",
+    github: "https://github.com/gizemyigitt/Crypto_Hype_Scanner",
     demo: null,
     featured: true,
     status: "active",

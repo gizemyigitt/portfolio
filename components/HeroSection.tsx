@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { siteConfig, getLang } from "@/lib/data";
 import { useLang } from "@/components/LanguageContext";
 import { ArrowDown, Mail } from "lucide-react";
-import { GithubIcon, LinkedinIcon, XIcon } from "@/components/SocialIcons";
+import { GithubIcon, LinkedinIcon } from "@/components/SocialIcons";
 
 export default function HeroSection() {
   const { lang, t } = useLang();
@@ -84,7 +84,6 @@ export default function HeroSection() {
           {[
             { href: siteConfig.github, icon: GithubIcon, label: "GitHub" },
             { href: siteConfig.linkedin, icon: LinkedinIcon, label: "LinkedIn" },
-            { href: siteConfig.twitter, icon: XIcon, label: "Twitter" },
             { href: `mailto:${siteConfig.email}`, icon: Mail, label: "Email" },
           ].map(({ href, icon: Icon, label }) => (
             <a
