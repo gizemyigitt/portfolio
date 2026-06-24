@@ -142,3 +142,23 @@ h1, h2, h3 {
   line-height: 1.8;
 }
 .prose-dark strong { color: var(--fg); }
+
+/* ── Blog images ─────────────────────────────── */
+.blog-figure {
+  margin: 2rem 0;
+}
+.blog-img {
+  width: 100%;
+  border-radius: 0.875rem;
+  border: 1px solid var(--border);
+  object-fit: cover;
+  display: block;
+}
+.blog-figure figcaption {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--fg-subtle);
+  font-family: var(--font-dm-sans, sans-serif);
+  font-style: italic;
+}

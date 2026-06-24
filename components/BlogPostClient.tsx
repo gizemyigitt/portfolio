@@ -10,6 +10,8 @@ function renderMarkdown(content: string): string {
     .replace(/^## (.+)$/gm, "<h2>$1</h2>")
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g,
+      '<figure class="blog-figure"><img src="$2" alt="$1" class="blog-img" /><figcaption>$1</figcaption></figure>')
     .replace(/`([^`\n]+)`/g, "<code>$1</code>")
     .replace(/```(\w*)\n([\s\S]*?)```/g, "<pre><code>$2</code></pre>")
     .replace(/^\| (.+) \|$/gm, (_, row) => {
@@ -20,7 +22,7 @@ function renderMarkdown(content: string): string {
     .replace(/^- (.+)$/gm, "<li>$1</li>")
     .replace(/(<li>.*<\/li>\n?)+/gs, (l) => `<ul>${l}</ul>`)
     .replace(/\n\n/g, "</p><p>")
-    .replace(/^(?!<[hpuoltd]|$)(.+)$/gm, "<p>$1</p>")
+    .replace(/^(?!<[hpuoltdfig]|$)(.+)$/gm, "<p>$1</p>")
     .replace(/<p><\/p>/g, "");
 }
 
@@ -42,6 +44,17 @@ export default function BlogPostClient({ post, related }: Props) {
         </Link>
 
         <header className="mb-10">
+          {post.coverImage && (
+            <div className="mb-8 rounded-2xl overflow-hidden border" style={{ borderColor: "var(--border)" }}>
+              <img
+                src={post.coverImage}
+                alt={getLang(post.title, lang)}
+                className="w-full object-cover"
+                style={{ maxHeight: "420px" }}
+              />
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-2 mb-4">
             {post.tags.map((tag, j) => (
               <span key={tag}
