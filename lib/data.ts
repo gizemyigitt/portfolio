@@ -409,6 +409,141 @@ Search Help Exit, standart arama yardımlarını projeye özgü iş kurallarına
     publishedAt: "2026-06-24",
     coverImage: undefined,
   },
+  {
+    slug: "alv-grid-f4-dump-cozumu",
+title: {
+  tr: "ALV Grid Alanları İçin F4 Yardımı Eklerken lvc_t_f4 Dump Problemi ve Çözümü",
+  en: "Fixing lvc_t_f4 Dump When Registering F4 Help in ALV Grid",
+},
+excerpt: {
+  tr: "ALV Grid üzerinde F4 yardımı eklerken lvc_t_f4 tipinin SORTED TABLE yapısından kaynaklanan dump problemini ve güvenli çözüm yöntemini inceliyoruz.",
+  en: "Learn why lvc_t_f4 may cause dumps when registering F4 help in ALV Grid and how to solve it safely using a standard internal table.",
+},
+content: `
+## Giriş
+
+ALV Grid üzerinde belirli alanlar için özel **F4 (Search Help)** desteği eklemek istediğimizde, \`REGISTER_F4_FOR_FIELDS\` metoduna gönderilen tablo **lvc_t_f4** tipindedir.
+
+İlk bakışta bu tabloya normal bir internal table gibi kayıt eklemek yeterli gibi görünse de, dinamik olarak alan eklenen senaryolarda beklenmedik **dump** hatalarıyla karşılaşabilirsiniz.
+
+Bu yazıda bu problemin neden oluştuğunu ve güvenli bir şekilde nasıl çözülebileceğini adım adım anlatıyorum.
+
+## Problemin Sebebi
+
+\`lvc_t_f4\` tipi standart bir internal table değildir. SAP içerisinde aşağıdaki şekilde tanımlanmıştır:
+
+\`\`\`abap
+TYPE SORTED TABLE OF lvc_s_f4
+WITH UNIQUE KEY fieldname.
+\`\`\`
+
+Bu nedenle tablo;
+
+- Kayıtları sıralı olarak tutar.
+- **fieldname** alanına göre benzersiz anahtar kullanır.
+- Yanlış sırada eklenen kayıtları kabul etmez.
+
+Dinamik olarak aşağıdaki gibi kayıt eklendiğinde:
+
+\`\`\`abap
+APPEND ls_f4 TO lt_f4.
+\`\`\`
+
+veya
+
+\`\`\`abap
+INSERT ls_f4 INTO TABLE lt_f4.
+\`\`\`
+
+alanlar sıralı değilse çalışma zamanında dump oluşabilir.
+
+## Adım 1 — Standart Internal Table Oluşturma
+
+Öncelikle F4 alanlarını eklemek için standart bir internal table tanımlıyoruz.
+
+\`\`\`abap
+DATA:
+  lt_f4     TYPE lvc_t_f4,
+  ls_f4     TYPE lvc_s_f4,
+  lt_f4_std TYPE STANDARD TABLE OF lvc_s_f4 WITH DEFAULT KEY.
+\`\`\`
+
+Bu tabloya kayıt eklerken herhangi bir sıralama zorunluluğu bulunmaz.
+
+## Adım 2 — F4 Alanlarını Standart Tabloya Eklemek
+
+Alanlar normal şekilde **APPEND** edilerek standart tabloya eklenebilir.
+
+\`\`\`abap
+CLEAR ls_f4.
+ls_f4-fieldname = 'ESAS_DOS_NO'.
+ls_f4-register  = 'X'.
+APPEND ls_f4 TO lt_f4_std.
+
+CLEAR ls_f4.
+ls_f4-fieldname = 'KNA1_NAME1'.
+ls_f4-register  = 'X'.
+APPEND ls_f4 TO lt_f4_std.
+
+CLEAR ls_f4.
+ls_f4-fieldname = 'KNA1_STCD2'.
+ls_f4-register  = 'X'.
+APPEND ls_f4 TO lt_f4_std.
+
+CLEAR ls_f4.
+ls_f4-fieldname = 'LFA1_NAME1'.
+ls_f4-register  = 'X'.
+APPEND ls_f4 TO lt_f4_std.
+
+CLEAR ls_f4.
+ls_f4-fieldname = 'LFA1_STCD2'.
+ls_f4-register  = 'X'.
+APPEND ls_f4 TO lt_f4_std.
+\`\`\`
+
+Bu aşamada kayıtların alfabetik sırada olması gerekmez.
+
+## Adım 3 — Alanları Sıralamak
+
+Tüm kayıtlar eklendikten sonra standart tablo **fieldname** alanına göre sıralanır.
+
+\`\`\`abap
+SORT lt_f4_std BY fieldname.
+\`\`\`
+
+Bu işlem sayesinde kayıtlar **lvc_t_f4** tipinin beklediği düzene getirilmiş olur.
+
+## Adım 4 — lvc_t_f4 Tablosuna Aktarmak
+
+Artık sıralanmış veriler güvenli şekilde hedef tabloya aktarılabilir.
+
+\`\`\`abap
+LOOP AT lt_f4_std INTO ls_f4.
+  INSERT ls_f4 INTO TABLE lt_f4.
+ENDLOOP.
+\`\`\`
+
+Daha sonra ALV Grid'e kayıt işlemi yapılabilir.
+
+\`\`\`abap
+CALL METHOD gr_grid->register_f4_for_fields
+  EXPORTING
+    it_f4 = lt_f4.
+\`\`\`
+
+## Sonuç
+
+**lvc_t_f4**, standart bir internal table değil, **SORTED TABLE** olarak tanımlanmıştır. Bu nedenle dinamik olarak eklenen kayıtların sıralama kurallarına uygun olmaması çalışma zamanında dump oluşmasına neden olabilir.
+
+Bu problemi önlemenin en güvenilir yöntemi, önce standart bir internal table kullanmak, tüm kayıtları bu tabloya eklemek, ardından **SORT** işlemini uygulayıp son olarak verileri **lvc_t_f4** tipine aktarmaktır.
+
+Bu yaklaşım özellikle dinamik F4 alanlarının oluşturulduğu ALV Grid geliştirmelerinde daha okunabilir, sürdürülebilir ve güvenli bir çözüm sunmaktadır.
+`,
+tags: ["SAP ABAP", "ALV Grid", "F4 Help"],
+readTime: 5,
+publishedAt: "2026-06-30",
+coverImage: undefined,
+  },
 ];
 
 export type Experience = typeof experiences[number];
