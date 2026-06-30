@@ -1318,6 +1318,10 @@ The result is code that is more readable, more performant, and more maintainable
   },
 ];
 
+export const sortedBlogPosts = [...blogPosts].sort(
+  (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+);
+
 export type Experience = typeof experiences[number];
 export type Project    = typeof projects[number];
 export type BlogPost   = typeof blogPosts[number];

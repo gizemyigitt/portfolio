@@ -2,13 +2,13 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { blogPosts, getLang } from "@/lib/data";
+import { sortedBlogPosts, getLang } from "@/lib/data";
 import { useLang } from "@/components/LanguageContext";
 import { Clock, Tag } from "lucide-react";
 
 export default function BlogPreviewSection() {
   const { lang, t } = useLang();
-  const preview = blogPosts.slice(0, 3);
+  const preview = sortedBlogPosts.slice(0, 3);
 
   return (
     <section id="blog" className="py-28 px-6" style={{ background: "var(--rose-faint)" }}>

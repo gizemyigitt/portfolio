@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { blogPosts, getLang } from "@/lib/data";
+import { sortedBlogPosts, getLang } from "@/lib/data";
 import { useLang } from "@/components/LanguageContext";
 import { Clock, Tag } from "lucide-react";
 
@@ -22,12 +22,12 @@ export default function BlogPage() {
           </h1>
           <div className="divider-gradient mt-4 mb-4 max-w-xs" />
           <p className="text-sm" style={{ color: "var(--fg-muted)", fontFamily: "var(--font-dm-sans)" }}>
-            {blogPosts.length} {t("blog_page_sub")}
+            {sortedBlogPosts.length} {t("blog_page_sub")}
           </p>
         </div>
 
         <div className="space-y-5">
-          {blogPosts.map((post, i) => (
+          {sortedBlogPosts.map((post, i) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} className="group block">
               <article className="border rounded-2xl p-6 card-glow"
                 style={{
