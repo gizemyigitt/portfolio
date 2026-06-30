@@ -544,6 +544,103 @@ readTime: 5,
 publishedAt: "2026-06-30",
 coverImage: undefined,
   },
+  {
+    slug: "bapi-alv-grid-refresh-mesaj-guncelleme",
+title: {
+  tr: "BAPI'den Dönen Hata Mesajlarının ALV Grid Üzerinde Görüntülenmemesi Sorunu",
+  en: "Displaying BAPI Return Messages in ALV Grid After Refresh",
+},
+excerpt: {
+  tr: "BAPI çağrısı sonrasında dönen hata mesajlarının ALV Grid üzerinde anında görünmemesi problemini ve refresh işlemiyle nasıl çözülebileceğini inceliyoruz.",
+  en: "Learn why BAPI return messages may not appear immediately in an ALV Grid and how refreshing the grid resolves the issue.",
+},
+content: `
+## Giriş
+
+SAP ABAP projelerinde BAPI çağrıları sonrasında kullanıcıya işlem sonucunu ALV Grid üzerinde göstermek oldukça yaygın bir senaryodur. Özellikle toplu işlem ekranlarında, her satırın işlem sonucunun **İleti (Message)** alanında görüntülenmesi kullanıcı deneyimi açısından önem taşır.
+
+Ancak bazı durumlarda BAPI'den dönen hata mesajı ilgili alana başarıyla yazılmasına rağmen ALV Grid üzerinde hemen görüntülenmeyebilir. Bunun nedeni, ALV'nin ekrandaki veriyi otomatik olarak yenilememesidir.
+
+Bu yazıda karşılaştığım bu problemi ve uyguladığım çözümü anlatıyorum.
+
+## Problemin Sebebi
+
+Mal kabul işlemi için kullanıcı önce ALV Grid üzerinden satır seçmektedir.
+
+\`\`\`abap
+CALL METHOD go_alv->get_selected_rows
+  IMPORTING
+    et_index_rows = lt_selected.
+\`\`\`
+
+Daha sonra kullanıcıdan işlem onayı alınmaktadır.
+
+\`\`\`abap
+CALL FUNCTION 'POPUP_TO_CONFIRM'
+  EXPORTING
+    titlebar      = 'Mal Kabul'
+    text_question = 'Mal kabulü yapılacaktır. Devam edilsin mi?'
+  IMPORTING
+    answer        = lv_answer.
+\`\`\`
+
+Seçilen satırlar için BAPI çağrısı gerçekleştirilir ve dönen hata mesajı ALV Grid'in **İleti** alanına aktarılır.
+
+Fakat bu aşamada ALV Grid yenilenmediği için kullanıcı mesajı ekranda göremez.
+
+## Adım 1 — BAPI Dönüş Mesajını Yakalamak
+
+BAPI çağrılarında dönüş mesajları genellikle **BAPIRET2** tipindeki tabloda tutulur.
+
+\`\`\`abap
+DATA lt_return TYPE STANDARD TABLE OF bapiret2.
+\`\`\`
+
+İşlem tamamlandıktan sonra bu tablo okunarak hata veya bilgi mesajı ilgili ALV satırına yazılır.
+
+## Adım 2 — MESSAGE Komutunu Çalıştırmak
+
+BAPI'den dönen mesaj kullanıcıya standart SAP mesajı olarak da gösterilebilir.
+
+\`\`\`abap
+MESSAGE ID ls_return-id
+        TYPE ls_return-type
+        NUMBER ls_return-number
+        WITH ls_return-message_v1
+             ls_return-message_v2
+             ls_return-message_v3
+             ls_return-message_v4.
+\`\`\`
+
+Bu işlem kullanıcıya anlık geri bildirim sağlar.
+
+## Adım 3 — ALV Grid'i Yenilemek
+
+Sorunun temel nedeni ALV'nin otomatik olarak güncellenmemesidir.
+
+Mesaj alanı güncellendikten sonra ALV mutlaka yenilenmelidir.
+
+\`\`\`abap
+gr_main->refresh_alv( ).
+\`\`\`
+
+Bu metod çalıştırıldığında ALV Grid ekrandaki veriyi yeniden okuyarak güncel mesajları kullanıcıya gösterir.
+
+Aynı şekilde başarılı BAPI çağrısı sonucunda oluşan **Malzeme Belgesi** gibi bilgiler de ALV üzerinde anında görüntülenebilir.
+
+## Sonuç
+
+BAPI çağrısı sonrasında dönen hata mesajının ALV satırına yazılması tek başına yeterli değildir. ALV Grid mevcut ekran verisini otomatik olarak güncellemediği için kullanıcı değişikliği göremez.
+
+Mesaj veya belge bilgileri ALV satırına aktarıldıktan sonra **refresh_alv()** metodunun çağrılması, hem hata mesajlarının hem de başarılı işlem sonuçlarının anında görüntülenmesini sağlar.
+
+Özellikle toplu işlem yapılan ALV ekranlarında bu küçük adım kullanıcı deneyimini önemli ölçüde iyileştirir ve ekran üzerindeki verilerin güncel kalmasını sağlar.
+`,
+tags: ["SAP ABAP", "BAPI", "ALV Grid"],
+readTime: 4,
+publishedAt: "2026-06-30",
+coverImage: undefined,
+  },
 ];
 
 export type Experience = typeof experiences[number];
