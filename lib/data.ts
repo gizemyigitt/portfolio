@@ -130,7 +130,8 @@ export const blogPosts = [
       tr: "Binance REST API'sını kullanarak real-time fiyat ve hacim verisi çeken bir Next.js dashboard'u sıfırdan inşa ediyoruz.",
       en: "We build a Next.js dashboard from scratch that pulls real-time price and volume data using the Binance REST API.",
     },
-    content: `
+    content: {
+      tr: `
 ## Giriş
 
 Binance, geliştiriciler için kapsamlı bir API sunar. Bu yazıda REST endpoint'lerini kullanarak kripto verilerini çeken bir Next.js uygulaması oluşturacağız.
@@ -178,6 +179,55 @@ const filtered = data
 
 Bu yapıyla dakikalar içinde çalışan bir kripto dashboard'u oluşturabilirsiniz.
     `,
+      en: `
+## Introduction
+
+Binance offers a comprehensive API for developers. In this post we'll build a Next.js application that pulls crypto data using its REST endpoints.
+
+## 1. Creating the API Route
+
+\`\`\`typescript
+// app/api/binance/ticker/route.ts
+export async function GET() {
+  const res = await fetch(
+    'https://api.binance.com/api/v3/ticker/24hr',
+    { next: { revalidate: 30 } }
+  );
+  const data = await res.json();
+  return Response.json(data);
+}
+\`\`\`
+
+## 2. Real-Time Updates with SWR
+
+\`\`\`typescript
+import useSWR from 'swr';
+
+const fetcher = (url: string) => fetch(url).then(r => r.json());
+
+export function useTicker() {
+  return useSWR('/api/binance/ticker', fetcher, {
+    refreshInterval: 30000,
+  });
+}
+\`\`\`
+
+## 3. Filtering and Sorting the Data
+
+\`\`\`typescript
+const filtered = data
+  .filter((t: Ticker) => t.symbol.endsWith('USDT'))
+  .sort((a: Ticker, b: Ticker) =>
+    parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume)
+  )
+  .slice(0, 50);
+\`\`\`
+
+## Conclusion
+
+With this structure you can have a working crypto dashboard up and running in minutes.
+    `,
+    },
     tags: ["Next.js", "TypeScript", "Binance API", "SWR"],
     readTime: 8,
     publishedAt: "2026-06-20",
@@ -192,7 +242,8 @@ Bu yapıyla dakikalar içinde çalışan bir kripto dashboard'u oluşturabilirsi
       tr: "Server Components ve Client Components arasındaki farkı, ne zaman hangisini kullanacağınızı ele alıyoruz.",
       en: "We cover the difference between Server and Client Components and when to use each.",
     },
-    content: `
+    content: {
+      tr: `
 ## Server Components Neden Önemli?
 
 Next.js App Router ile gelen Server Components, React'in en büyük paradigma değişiklerinden biri.
@@ -222,6 +273,37 @@ export function SearchBar() {
 
 Server/Client ayrımını doğru yapmak hem performansı artırır hem de bundle boyutunu düşürür.
     `,
+      en: `
+## Why Server Components Matter
+
+Server Components, introduced with the Next.js App Router, represent one of React's biggest paradigm shifts.
+
+## The Core Difference
+
+| Feature | Server Component | Client Component |
+|---------|-----------------|-----------------|
+| Where it renders | Server | Browser |
+| useState/useEffect | ❌ | ✅ |
+| Direct DB access | ✅ | ❌ |
+| Bundle size | 0 | Added to the JS bundle |
+
+## When Should You Use "use client"?
+
+\`\`\`typescript
+'use client';
+import { useState } from 'react';
+
+export function SearchBar() {
+  const [query, setQuery] = useState('');
+  return <input onChange={e => setQuery(e.target.value)} />;
+}
+\`\`\`
+
+## Conclusion
+
+Getting the Server/Client split right both boosts performance and shrinks your bundle size.
+    `,
+    },
     tags: ["Next.js", "React", "Server Components"],
     readTime: 6,
     publishedAt: "2026-06-17",
@@ -236,7 +318,8 @@ Server/Client ayrımını doğru yapmak hem performansı artırır hem de bundle
       tr: "Crypto Hype Scanner projesinde kullandığım çok faktörlü scoring algoritmasını nasıl tasarladığımı anlatıyorum.",
       en: "I walk through the multi-factor scoring algorithm I designed for the Crypto Hype Scanner project.",
     },
-    content: `
+    content: {
+      tr: `
 ## Neden Tip Güvenli Scoring?
 
 Finansal algoritmalar, yanlış tip dönüşümlerinden kolayca zarar görür.
@@ -260,6 +343,31 @@ function normalize(value: number, min: number, max: number): number {
 
 Tip güvenli scoring algoritmaları, hataları runtime yerine compile-time'da yakalar.
     `,
+      en: `
+## Why Type-Safe Scoring?
+
+Financial algorithms are easily broken by incorrect type conversions.
+
+## Core Design
+
+\`\`\`typescript
+interface ScoringWeights {
+  volume: number;
+  trending: number;
+  volatility: number;
+}
+
+function normalize(value: number, min: number, max: number): number {
+  if (max === min) return 0;
+  return Math.min(100, Math.max(0, ((value - min) / (max - min)) * 100));
+}
+\`\`\`
+
+## Conclusion
+
+Type-safe scoring algorithms catch errors at compile-time instead of at runtime.
+    `,
+    },
     tags: ["TypeScript", "Algoritma", "Kripto"],
     readTime: 7,
     publishedAt: "2026-06-11",
@@ -274,7 +382,8 @@ Tip güvenli scoring algoritmaları, hataları runtime yerine compile-time'da ya
       tr: "SWR'nin cache stratejileri, revalidasyon mantığı ve polling yapısını derinlemesine inceliyoruz.",
       en: "A deep dive into SWR's cache strategies, revalidation logic, and polling patterns.",
     },
-    content: `
+    content: {
+      tr: `
 ## SWR Nedir?
 
 SWR (stale-while-revalidate), Vercel'in geliştirdiği React data-fetching kütüphanesidir.
@@ -299,6 +408,32 @@ useSWR('/api/hype', fetcher, {
 
 SWR, kripto gibi sık değişen veri için idealdir.
     `,
+      en: `
+## What Is SWR?
+
+SWR (stale-while-revalidate) is a React data-fetching library built by Vercel.
+
+## Basic Usage
+
+\`\`\`typescript
+const { data, error, isLoading } = useSWR('/api/hype', fetcher);
+\`\`\`
+
+## Polling
+
+\`\`\`typescript
+useSWR('/api/hype', fetcher, {
+  refreshInterval: 30000,
+  revalidateOnFocus: true,
+  dedupingInterval: 5000,
+});
+\`\`\`
+
+## Conclusion
+
+SWR is ideal for fast-changing data like crypto prices.
+    `,
+    },
     tags: ["SWR", "React", "Next.js", "Performance"],
     readTime: 9,
     publishedAt: "2026-06-05",
@@ -313,7 +448,8 @@ SWR, kripto gibi sık değişen veri için idealdir.
       tr: "SAP ABAP'ta Search Help Exit kullanarak arama yardımını runtime'da dinamik olarak filtrelemeyi ve popup açmadan doğrudan liste göstermeyi inceliyoruz.",
       en: "We explore how to use SAP ABAP Search Help Exit to dynamically filter search help results at runtime and display them directly without a popup.",
     },
-    content: `
+    content: {
+      tr: `
 ## Giriş
 
 SAP projelerinde kullanıcıya sunulan F4 arama yardımlarını (Search Help) belirli kriterlere göre dinamik olarak filtrelemek sık karşılaşılan bir gereksinimdir. Örneğin bir sipariş ekranında, kullanıcının seçebileceği hareket kodlarının yalnızca kendi fabrikasına (WERKS) ait olanlarla sınırlandırılması gerekebilir.
@@ -404,6 +540,98 @@ Bu yapı sayesinde:
 
 Search Help Exit, standart arama yardımlarını projeye özgü iş kurallarına göre şeffaf biçimde uyarlamanın en temiz yöntemlerinden biridir.
     `,
+      en: `
+## Introduction
+
+Dynamically filtering F4 search helps based on specific criteria is a common requirement in SAP projects. For example, on an order screen, the movement codes a user can select might need to be restricted to only those belonging to their own plant (WERKS).
+
+In this post I explain how I achieved this filtering using the **Search Help Exit** mechanism, and how I made the search help display results directly without opening a popup screen.
+
+## What Is a Search Help Exit?
+
+A Search Help Exit is a custom Function Module created by copying the standard **F4IF_SHLP_EXIT_MASSVARNAME** module. SAP automatically calls this FM at different steps of the search help lifecycle (SELONE, PRESEL, SELECT, DISP, etc.). We can hook into the relevant step to manipulate the records.
+
+## Step 1 — Defining the Search Help
+
+First, the search help is created in SE11. In our example, the search help **ZMM_SH_MOVEMENT** uses the table **ZMMT_MOVEMENT** as its selection method.
+
+![ZMM_SH_MOVEMENT Search Help definition — SE11](/blog/search-help-exit/search-help-exit-tanim.jpeg)
+
+We enter the name of the FM we'll create in the exit field: **FM_EXIT**
+
+The dialog type must be set to **"Dialog with value restriction"** — this allows the records to be edited dynamically inside the FM at runtime.
+
+If the results should be shown directly without ever opening the popup screen, the **"Immediate Display"** option should also be checked.
+
+## Step 2 — Creating FM_EXIT
+
+**FM_EXIT** is created by copying the F4IF_SHLP_EXIT_MASSVARNAME function. The interface is kept exactly the same.
+
+\`\`\`abap
+FUNCTION FM_EXIT.
+*"-----------------------------------------------------------------------
+*"*"Local Interface:
+*"  TABLES
+*"      SHLP_TAB  TYPE  SHLP_DESCR_TAB_T
+*"      RECORD_TAB  STRUCTURE  SEAHLPRES
+*"  CHANGING
+*"      VALUE(SHLP)  TYPE  SHLP_DESCR_T
+*"      VALUE(CALLCONTROL)  LIKE  DDSHF4CTRL
+*"-----------------------------------------------------------------------
+
+  DATA: lv_werks  TYPE eban-werks,
+        lv_string TYPE c LENGTH 4.
+
+  IMPORT werks = lv_werks FROM MEMORY ID 'ZWERKS'.
+
+  IF callcontrol-step = 'DISP'.
+    LOOP AT record_tab.
+      lv_string = record_tab-string+23(4).
+      IF lv_string NE lv_werks.
+        DELETE record_tab.
+      ENDIF.
+    ENDLOOP.
+
+    FREE MEMORY ID 'ZWERKS'.
+  ENDIF.
+
+ENDFUNCTION.
+\`\`\`
+
+## Breaking Down the Code
+
+The **CALLCONTROL-STEP = 'DISP'** step is the stage right before the records are rendered on screen. By hooking into this step, we can manipulate the records inside **RECORD_TAB**.
+
+The **RECORD_TAB-STRING** field holds all search help columns concatenated as a single character string. The expression \`+23(4)\` specifies the offset and length of the WERKS field within that string — this value changes depending on each search help's definition.
+
+**IMPORT ... FROM MEMORY ID** retrieves the plant information that the calling program previously wrote with **EXPORT ... TO MEMORY ID**. This is a clean way to pass values between screens.
+
+## Step 3 — Writing to MEMORY in the Calling Program
+
+Before FM_EXIT runs, the active WERKS value must be written to memory in the calling ABAP program:
+
+\`\`\`abap
+EXPORT werks = sy-mandt TO MEMORY ID 'ZWERKS'.
+\`\`\`
+
+Or using a screen field value:
+
+\`\`\`abap
+EXPORT werks = gs_header-werks TO MEMORY ID 'ZWERKS'.
+\`\`\`
+
+## Conclusion
+
+With this setup:
+
+- When the user presses F4, the search help automatically triggers FM_EXIT
+- The FM keeps only movement codes belonging to the relevant plant within RECORD_TAB during the DISP step
+- If "Immediate Display" is enabled, the filtered list is shown directly without opening a popup
+- Memory is cleared afterward to prevent data leaks
+
+Search Help Exit is one of the cleanest ways to transparently adapt standard search helps to project-specific business rules.
+    `,
+    },
     tags: ["SAP ABAP", "Search Help", "Function Module", "Dialog"],
     readTime: 6,
     publishedAt: "2026-06-24",
@@ -411,15 +639,16 @@ Search Help Exit, standart arama yardımlarını projeye özgü iş kurallarına
   },
   {
     slug: "alv-grid-f4-dump-cozumu",
-title: {
-  tr: "ALV Grid Alanları İçin F4 Yardımı Eklerken lvc_t_f4 Dump Problemi ve Çözümü",
-  en: "Fixing lvc_t_f4 Dump When Registering F4 Help in ALV Grid",
-},
-excerpt: {
-  tr: "ALV Grid üzerinde F4 yardımı eklerken lvc_t_f4 tipinin SORTED TABLE yapısından kaynaklanan dump problemini ve güvenli çözüm yöntemini inceliyoruz.",
-  en: "Learn why lvc_t_f4 may cause dumps when registering F4 help in ALV Grid and how to solve it safely using a standard internal table.",
-},
-content: `
+    title: {
+      tr: "ALV Grid Alanları İçin F4 Yardımı Eklerken lvc_t_f4 Dump Problemi ve Çözümü",
+      en: "Fixing lvc_t_f4 Dump When Registering F4 Help in ALV Grid",
+    },
+    excerpt: {
+      tr: "ALV Grid üzerinde F4 yardımı eklerken lvc_t_f4 tipinin SORTED TABLE yapısından kaynaklanan dump problemini ve güvenli çözüm yöntemini inceliyoruz.",
+      en: "Learn why lvc_t_f4 may cause dumps when registering F4 help in ALV Grid and how to solve it safely using a standard internal table.",
+    },
+    content: {
+      tr: `
 ## Giriş
 
 ALV Grid üzerinde belirli alanlar için özel **F4 (Search Help)** desteği eklemek istediğimizde, \`REGISTER_F4_FOR_FIELDS\` metoduna gönderilen tablo **lvc_t_f4** tipindedir.
@@ -539,22 +768,144 @@ Bu problemi önlemenin en güvenilir yöntemi, önce standart bir internal table
 
 Bu yaklaşım özellikle dinamik F4 alanlarının oluşturulduğu ALV Grid geliştirmelerinde daha okunabilir, sürdürülebilir ve güvenli bir çözüm sunmaktadır.
 `,
-tags: ["SAP ABAP", "ALV Grid", "F4 Help"],
-readTime: 5,
-publishedAt: "2026-06-30",
-coverImage: undefined,
+      en: `
+## Introduction
+
+When we want to add custom **F4 (Search Help)** support for specific fields on an ALV Grid, the table passed to the \`REGISTER_F4_FOR_FIELDS\` method is of type **lvc_t_f4**.
+
+At first glance, simply appending records to this table like a normal internal table seems sufficient — but in scenarios where fields are added dynamically, you can run into unexpected **dump** errors.
+
+In this post I walk through why this problem occurs and how to solve it safely, step by step.
+
+## Why the Problem Occurs
+
+The \`lvc_t_f4\` type is not a standard internal table. SAP defines it as follows:
+
+\`\`\`abap
+TYPE SORTED TABLE OF lvc_s_f4
+WITH UNIQUE KEY fieldname.
+\`\`\`
+
+Because of this, the table:
+
+- Keeps its records sorted.
+- Uses a unique key based on the **fieldname** field.
+- Rejects records inserted out of order.
+
+When records are added dynamically like this:
+
+\`\`\`abap
+APPEND ls_f4 TO lt_f4.
+\`\`\`
+
+or
+
+\`\`\`abap
+INSERT ls_f4 INTO TABLE lt_f4.
+\`\`\`
+
+a runtime dump can occur if the fields aren't already sorted.
+
+## Step 1 — Creating a Standard Internal Table
+
+First, we define a standard internal table to collect the F4 fields.
+
+\`\`\`abap
+DATA:
+  lt_f4     TYPE lvc_t_f4,
+  ls_f4     TYPE lvc_s_f4,
+  lt_f4_std TYPE STANDARD TABLE OF lvc_s_f4 WITH DEFAULT KEY.
+\`\`\`
+
+There's no ordering requirement when appending to this table.
+
+## Step 2 — Adding F4 Fields to the Standard Table
+
+Fields can be appended normally to the standard table with **APPEND**.
+
+\`\`\`abap
+CLEAR ls_f4.
+ls_f4-fieldname = 'ESAS_DOS_NO'.
+ls_f4-register  = 'X'.
+APPEND ls_f4 TO lt_f4_std.
+
+CLEAR ls_f4.
+ls_f4-fieldname = 'KNA1_NAME1'.
+ls_f4-register  = 'X'.
+APPEND ls_f4 TO lt_f4_std.
+
+CLEAR ls_f4.
+ls_f4-fieldname = 'KNA1_STCD2'.
+ls_f4-register  = 'X'.
+APPEND ls_f4 TO lt_f4_std.
+
+CLEAR ls_f4.
+ls_f4-fieldname = 'LFA1_NAME1'.
+ls_f4-register  = 'X'.
+APPEND ls_f4 TO lt_f4_std.
+
+CLEAR ls_f4.
+ls_f4-fieldname = 'LFA1_STCD2'.
+ls_f4-register  = 'X'.
+APPEND ls_f4 TO lt_f4_std.
+\`\`\`
+
+At this stage the records don't need to be in alphabetical order.
+
+## Step 3 — Sorting the Fields
+
+Once all records have been added, the standard table is sorted by the **fieldname** field.
+
+\`\`\`abap
+SORT lt_f4_std BY fieldname.
+\`\`\`
+
+This brings the records into the order that the **lvc_t_f4** type expects.
+
+## Step 4 — Transferring to the lvc_t_f4 Table
+
+The now-sorted data can be safely transferred to the target table.
+
+\`\`\`abap
+LOOP AT lt_f4_std INTO ls_f4.
+  INSERT ls_f4 INTO TABLE lt_f4.
+ENDLOOP.
+\`\`\`
+
+Registration with the ALV Grid can then proceed.
+
+\`\`\`abap
+CALL METHOD gr_grid->register_f4_for_fields
+  EXPORTING
+    it_f4 = lt_f4.
+\`\`\`
+
+## Conclusion
+
+**lvc_t_f4** is not a standard internal table — it's defined as a **SORTED TABLE**. This means dynamically added records that don't follow the sorting rule can cause a runtime dump.
+
+The most reliable way to prevent this is to first use a standard internal table, add all records to it, apply a **SORT**, and only then transfer the data into the **lvc_t_f4** type.
+
+This approach offers a more readable, maintainable, and safe solution, especially in ALV Grid developments where F4 fields are created dynamically.
+`,
+    },
+    tags: ["SAP ABAP", "ALV Grid", "F4 Help"],
+    readTime: 5,
+    publishedAt: "2026-06-30",
+    coverImage: undefined,
   },
   {
     slug: "bapi-alv-grid-refresh-mesaj-guncelleme",
-title: {
-  tr: "BAPI'den Dönen Hata Mesajlarının ALV Grid Üzerinde Görüntülenmemesi Sorunu",
-  en: "Displaying BAPI Return Messages in ALV Grid After Refresh",
-},
-excerpt: {
-  tr: "BAPI çağrısı sonrasında dönen hata mesajlarının ALV Grid üzerinde anında görünmemesi problemini ve refresh işlemiyle nasıl çözülebileceğini inceliyoruz.",
-  en: "Learn why BAPI return messages may not appear immediately in an ALV Grid and how refreshing the grid resolves the issue.",
-},
-content: `
+    title: {
+      tr: "BAPI'den Dönen Hata Mesajlarının ALV Grid Üzerinde Görüntülenmemesi Sorunu",
+      en: "Displaying BAPI Return Messages in ALV Grid After Refresh",
+    },
+    excerpt: {
+      tr: "BAPI çağrısı sonrasında dönen hata mesajlarının ALV Grid üzerinde anında görünmemesi problemini ve refresh işlemiyle nasıl çözülebileceğini inceliyoruz.",
+      en: "Learn why BAPI return messages may not appear immediately in an ALV Grid and how refreshing the grid resolves the issue.",
+    },
+    content: {
+      tr: `
 ## Giriş
 
 SAP ABAP projelerinde BAPI çağrıları sonrasında kullanıcıya işlem sonucunu ALV Grid üzerinde göstermek oldukça yaygın bir senaryodur. Özellikle toplu işlem ekranlarında, her satırın işlem sonucunun **İleti (Message)** alanında görüntülenmesi kullanıcı deneyimi açısından önem taşır.
@@ -636,10 +987,93 @@ Mesaj veya belge bilgileri ALV satırına aktarıldıktan sonra **refresh_alv()*
 
 Özellikle toplu işlem yapılan ALV ekranlarında bu küçük adım kullanıcı deneyimini önemli ölçüde iyileştirir ve ekran üzerindeki verilerin güncel kalmasını sağlar.
 `,
-tags: ["SAP ABAP", "BAPI", "ALV Grid"],
-readTime: 4,
-publishedAt: "2026-06-30",
-coverImage: undefined,
+      en: `
+## Introduction
+
+Showing the result of a BAPI call to the user via an ALV Grid is a very common scenario in SAP ABAP projects. Especially on mass-processing screens, displaying each row's outcome in a **Message** column matters a lot for user experience.
+
+In some cases, however, even though the error message returned by the BAPI is successfully written to the relevant field, it may not appear immediately in the ALV Grid. The reason is that the ALV doesn't automatically refresh the data shown on screen.
+
+In this post I describe this problem and the fix I applied.
+
+## Why the Problem Occurs
+
+For a goods receipt process, the user first selects rows from the ALV Grid.
+
+\`\`\`abap
+CALL METHOD go_alv->get_selected_rows
+  IMPORTING
+    et_index_rows = lt_selected.
+\`\`\`
+
+The user is then asked to confirm the action.
+
+\`\`\`abap
+CALL FUNCTION 'POPUP_TO_CONFIRM'
+  EXPORTING
+    titlebar      = 'Goods Receipt'
+    text_question = 'Goods receipt will be posted. Continue?'
+  IMPORTING
+    answer        = lv_answer.
+\`\`\`
+
+A BAPI call is then made for the selected rows, and the returned error message is written into the ALV Grid's **Message** field.
+
+But at this point, since the ALV Grid hasn't been refreshed, the user can't see the message on screen.
+
+## Step 1 — Capturing the BAPI Return Message
+
+In BAPI calls, return messages are typically held in a table of type **BAPIRET2**.
+
+\`\`\`abap
+DATA lt_return TYPE STANDARD TABLE OF bapiret2.
+\`\`\`
+
+Once the operation completes, this table is read and the error or info message is written to the corresponding ALV row.
+
+## Step 2 — Triggering the MESSAGE Statement
+
+The message returned by the BAPI can also be shown to the user as a standard SAP message.
+
+\`\`\`abap
+MESSAGE ID ls_return-id
+        TYPE ls_return-type
+        NUMBER ls_return-number
+        WITH ls_return-message_v1
+             ls_return-message_v2
+             ls_return-message_v3
+             ls_return-message_v4.
+\`\`\`
+
+This gives the user immediate feedback.
+
+## Step 3 — Refreshing the ALV Grid
+
+The root cause of the problem is that the ALV doesn't update itself automatically.
+
+After the message field is updated, the ALV must be explicitly refreshed.
+
+\`\`\`abap
+gr_main->refresh_alv( ).
+\`\`\`
+
+Calling this method makes the ALV Grid re-read the on-screen data and display the current messages to the user.
+
+The same applies to information like the **Material Document** number generated after a successful BAPI call — it can also be shown instantly on the ALV once refreshed.
+
+## Conclusion
+
+Writing the BAPI's return message into the ALV row is not enough on its own. Because the ALV Grid doesn't automatically refresh its current screen data, the user won't see the change.
+
+Calling **refresh_alv()** after transferring the message or document information to the ALV row ensures that both error messages and successful operation results are displayed immediately.
+
+This small step significantly improves the user experience, especially on ALV screens used for mass processing, and keeps the on-screen data up to date.
+`,
+    },
+    tags: ["SAP ABAP", "BAPI", "ALV Grid"],
+    readTime: 4,
+    publishedAt: "2026-06-30",
+    coverImage: undefined,
   },
 ];
 

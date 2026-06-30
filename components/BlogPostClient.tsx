@@ -71,13 +71,6 @@ export default function BlogPostClient({ post, related }: Props) {
             ))}
           </div>
 
-          {lang === "en" && t("blog_tr_only") && (
-            <div className="mb-4 text-xs border px-4 py-2.5 rounded-xl"
-              style={{ color: "var(--bej)", borderColor: "var(--border)", background: "var(--bej-faint)", fontFamily: "var(--font-dm-sans)" }}>
-              ⚠ {t("blog_tr_only")}
-            </div>
-          )}
-
           <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4"
             style={{ color: "var(--fg)", fontFamily: "var(--font-playfair, serif)" }}>
             {getLang(post.title, lang)}
@@ -102,7 +95,7 @@ export default function BlogPostClient({ post, related }: Props) {
         </header>
 
         <div className="prose-dark"
-          dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content) }} />
+          dangerouslySetInnerHTML={{ __html: renderMarkdown(getLang(post.content, lang)) }} />
 
         {related.length > 0 && (
           <div className="mt-16 pt-10 border-t" style={{ borderColor: "var(--border)" }}>
