@@ -50,7 +50,6 @@ export const ui = {
     blog_page_sub: "yazı — Next.js, TypeScript, API geliştirme ve daha fazlası.",
     blog_back: "← Tüm yazılar",
     blog_related: "İlgili Yazılar",
-    blog_tr_only: "",
     back_home: "← Ana Sayfa",
     // Contact
     contact_label: "✦ İletişim",
@@ -117,7 +116,6 @@ export const ui = {
     blog_page_sub: "posts — Next.js, TypeScript, API development and more.",
     blog_back: "← All posts",
     blog_related: "Related Posts",
-    blog_tr_only: "This article is available in Turkish only.",
     back_home: "← Home",
     // Contact
     contact_label: "✦ Contact",
