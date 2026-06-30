@@ -112,7 +112,7 @@ export const projects = [
     },
     tech: ["Next.js 16", "TypeScript", "TailwindCSS", "Framer Motion"],
     github: "https://github.com/gizemyigitt/portfolio",
-    demo: "https://gizemyigitt.vercel.app",
+    demo: "https://gizem-seferoglu.vercel.app/",
     featured: true,
     status: "active",
     year: 2026,
