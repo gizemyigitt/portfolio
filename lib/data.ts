@@ -1075,6 +1075,247 @@ This small step significantly improves the user experience, especially on ALV sc
     publishedAt: "2026-06-30",
     coverImage: undefined,
   },
+  {
+    slug: "group-by-ile-veri-isleme-optimizasyonu",
+    title: {
+      tr: "GROUP BY ile Veri İşleme Optimizasyonu",
+      en: "Optimizing Data Processing with GROUP BY in ABAP",
+    },
+    excerpt: {
+      tr: "Aynı sap_no değerine sahip kayıtları çiftli LOOP ile tek tek işlemek yerine, ABAP'ın GROUP BY ifadesiyle daha performanslı ve sürdürülebilir bir çözüm tasarlıyoruz.",
+      en: "Instead of processing records with the same sap_no one by one in nested loops, we design a more performant and maintainable solution using ABAP's GROUP BY clause.",
+    },
+    content: {
+      tr: `
+## Giriş
+
+Aynı **sap_no** değerine sahip kayıtları işlerken klasik yaklaşım genellikle iç içe iki **LOOP** kullanmaktır: dış loop ile ana kayıtlar, iç loop ile her kaydın alt belge listesi (document_list) tek tek dolaşılır.
+
+Bu yöntem küçük veri setlerinde çalışsa da, kayıt sayısı arttıkça gereksiz döngü tetiklenmesine, performans kaybına ve kodun sürdürülebilirliğinin zayıflamasına yol açar. Bu yazıda bu problemi **GROUP BY** ile nasıl çözdüğümü anlatıyorum.
+
+## Problemin Sebebi
+
+Klasik yaklaşımda her kayıt için ayrı ayrı iç loop çalıştırılır ve aynı sap_no'ya ait kayıtlar birbirinden bağımsız işlenir. Bu durumda:
+
+- Aynı gruba ait kayıtlar arasında **order_no** çakışmaları oluşabilir.
+- Döngü karmaşıklığı artar, kod okunabilirliği düşer.
+- Performans, kayıt sayısıyla doğru orantılı şekilde kötüleşir.
+
+## Adım 1 — GROUP BY ile Kayıtları Gruplamak
+
+ABAP'ın **LOOP AT ... GROUP BY** ifadesi, belirtilen alana göre kayıtları runtime'da gruplayarak her grup için tek bir referans (group key) üretir.
+
+\`\`\`abap
+LOOP AT ls_output-mt_documents-document_map_list
+     ASSIGNING FIELD-SYMBOL(<lfs_list>)
+     WHERE document_list IS NOT INITIAL
+     GROUP BY ( sap_no = <lfs_list>-sap_no ) INTO DATA(ls_group_key).
+\`\`\`
+
+Bu sayede aynı **sap_no** değerine sahip tüm kayıtlar, ayrı ayrı değil tek bir grup olarak ele alınır.
+
+## Adım 2 — Grup İçindeki Kayıtları İşlemek
+
+Her grup için **LOOP AT GROUP** kullanılarak grubun içindeki kayıtlar dolaşılır.
+
+\`\`\`abap
+LOOP AT GROUP ls_group_key ASSIGNING FIELD-SYMBOL(<lfs_grouped>).
+
+  IF ls_output_temp-mt_documents-document_map_list IS INITIAL.
+    APPEND <lfs_grouped> TO ls_output_temp-mt_documents-document_map_list.
+
+  ELSE.
+    " ... order_no çakışması burada çözülür
+  ENDIF.
+
+ENDLOOP.
+\`\`\`
+
+İlk kayıt doğrudan eklenirken, sonraki kayıtlar için **order_no** çakışmasının önüne geçilmesi gerekir.
+
+## Adım 3 — REDUCE ile Maksimum order_no Hesaplama
+
+Aynı gruba ait belgeler birleştirilirken, önceki belgelerin en yüksek **order_no** değeri **REDUCE** ifadesiyle tek satırda hesaplanır.
+
+\`\`\`abap
+DATA(lv_max_order_no) = REDUCE i(
+    INIT lv = 0
+    FOR wa IN ls_output_temp-mt_documents-document_map_list
+    FOR doc IN wa-document_list
+    NEXT lv = nmax( lv, doc-order_no ) ).
+
+LOOP AT <lfs_grouped>-document_list ASSIGNING FIELD-SYMBOL(<lfs_doc>).
+  <lfs_doc>-order_no += lv_max_order_no.
+  APPEND <lfs_doc> TO ls_output_temp-mt_documents-document_map_list[ 1 ]-document_list.
+ENDLOOP.
+\`\`\`
+
+Yeni eklenen her belgenin **order_no** değeri, mevcut maksimum değerin üzerine eklenerek sıralama bütünlüğü korunur.
+
+## Tam Yapı
+
+\`\`\`abap
+IF ls_output IS NOT INITIAL.
+
+  LOOP AT ls_output-mt_documents-document_map_list
+       ASSIGNING FIELD-SYMBOL(<lfs_list>)
+       WHERE document_list IS NOT INITIAL
+       GROUP BY ( sap_no = <lfs_list>-sap_no ) INTO DATA(ls_group_key).
+
+    CLEAR ls_output_temp.
+
+    LOOP AT GROUP ls_group_key ASSIGNING FIELD-SYMBOL(<lfs_grouped>).
+
+      IF ls_output_temp-mt_documents-document_map_list IS INITIAL.
+        APPEND <lfs_grouped> TO ls_output_temp-mt_documents-document_map_list.
+
+      ELSE.
+        DATA(lv_max_order_no) = REDUCE i(
+            INIT lv = 0
+            FOR wa IN ls_output_temp-mt_documents-document_map_list
+            FOR doc IN wa-document_list
+            NEXT lv = nmax( lv, doc-order_no ) ).
+
+        LOOP AT <lfs_grouped>-document_list ASSIGNING FIELD-SYMBOL(<lfs_doc>).
+          <lfs_doc>-order_no += lv_max_order_no.
+          APPEND <lfs_doc> TO ls_output_temp-mt_documents-document_map_list[ 1 ]-document_list.
+        ENDLOOP.
+
+      ENDIF.
+
+    ENDLOOP.
+
+  ENDLOOP.
+
+ENDIF.
+\`\`\`
+
+## Sonuç
+
+Klasik yaklaşımda iki loop ile aynı sap_no değerine sahip kayıtların her biri üzerinde tek tek işlem yapmak, gereksiz döngü tetiklenmesine ve kodun sürdürülebilirliğinin zayıflamasına yol açar.
+
+**GROUP BY** kullanmak hem döngü tekrarlarını ortadan kaldırıp işlemi verimli hale getiriyor, hem de her grup için maksimum **order_no**'yu tek seferde belirleyip sonraki kayıtları kontrollü şekilde güncelleyerek veri bütünlüğünü koruyor.
+
+Böylece kod hem daha okunabilir, hem performanslı, hem de sürdürülebilir bir hale geliyor.
+    `,
+      en: `
+## Introduction
+
+When processing records that share the same **sap_no**, the classic approach is usually two nested **LOOP** statements: an outer loop over the main records, and an inner loop iterating each record's sub-document list (document_list) one by one.
+
+While this works for small data sets, as the record count grows it leads to unnecessary loop triggering, performance loss, and weakened code maintainability. In this post I explain how I solved this using **GROUP BY**.
+
+## Why the Problem Occurs
+
+In the classic approach, a separate inner loop runs for every record, and records sharing the same sap_no are processed independently of each other. As a result:
+
+- **order_no** collisions can occur between records belonging to the same group.
+- Loop complexity increases and code readability drops.
+- Performance degrades in direct proportion to the record count.
+
+## Step 1 — Grouping Records with GROUP BY
+
+ABAP's **LOOP AT ... GROUP BY** clause groups records at runtime based on a specified field, producing a single reference (group key) per group.
+
+\`\`\`abap
+LOOP AT ls_output-mt_documents-document_map_list
+     ASSIGNING FIELD-SYMBOL(<lfs_list>)
+     WHERE document_list IS NOT INITIAL
+     GROUP BY ( sap_no = <lfs_list>-sap_no ) INTO DATA(ls_group_key).
+\`\`\`
+
+This way, all records sharing the same **sap_no** are handled as a single group instead of separately.
+
+## Step 2 — Processing Records Within a Group
+
+For each group, **LOOP AT GROUP** is used to iterate the records that belong to it.
+
+\`\`\`abap
+LOOP AT GROUP ls_group_key ASSIGNING FIELD-SYMBOL(<lfs_grouped>).
+
+  IF ls_output_temp-mt_documents-document_map_list IS INITIAL.
+    APPEND <lfs_grouped> TO ls_output_temp-mt_documents-document_map_list.
+
+  ELSE.
+    " ... order_no collision is resolved here
+  ENDIF.
+
+ENDLOOP.
+\`\`\`
+
+The first record is appended directly, while subsequent records need their **order_no** collision avoided.
+
+## Step 3 — Calculating the Maximum order_no with REDUCE
+
+When merging documents belonging to the same group, the highest **order_no** among the previous documents is calculated in a single line using **REDUCE**.
+
+\`\`\`abap
+DATA(lv_max_order_no) = REDUCE i(
+    INIT lv = 0
+    FOR wa IN ls_output_temp-mt_documents-document_map_list
+    FOR doc IN wa-document_list
+    NEXT lv = nmax( lv, doc-order_no ) ).
+
+LOOP AT <lfs_grouped>-document_list ASSIGNING FIELD-SYMBOL(<lfs_doc>).
+  <lfs_doc>-order_no += lv_max_order_no.
+  APPEND <lfs_doc> TO ls_output_temp-mt_documents-document_map_list[ 1 ]-document_list.
+ENDLOOP.
+\`\`\`
+
+Every newly added document's **order_no** is offset on top of the current maximum, preserving ordering integrity.
+
+## Full Structure
+
+\`\`\`abap
+IF ls_output IS NOT INITIAL.
+
+  LOOP AT ls_output-mt_documents-document_map_list
+       ASSIGNING FIELD-SYMBOL(<lfs_list>)
+       WHERE document_list IS NOT INITIAL
+       GROUP BY ( sap_no = <lfs_list>-sap_no ) INTO DATA(ls_group_key).
+
+    CLEAR ls_output_temp.
+
+    LOOP AT GROUP ls_group_key ASSIGNING FIELD-SYMBOL(<lfs_grouped>).
+
+      IF ls_output_temp-mt_documents-document_map_list IS INITIAL.
+        APPEND <lfs_grouped> TO ls_output_temp-mt_documents-document_map_list.
+
+      ELSE.
+        DATA(lv_max_order_no) = REDUCE i(
+            INIT lv = 0
+            FOR wa IN ls_output_temp-mt_documents-document_map_list
+            FOR doc IN wa-document_list
+            NEXT lv = nmax( lv, doc-order_no ) ).
+
+        LOOP AT <lfs_grouped>-document_list ASSIGNING FIELD-SYMBOL(<lfs_doc>).
+          <lfs_doc>-order_no += lv_max_order_no.
+          APPEND <lfs_doc> TO ls_output_temp-mt_documents-document_map_list[ 1 ]-document_list.
+        ENDLOOP.
+
+      ENDIF.
+
+    ENDLOOP.
+
+  ENDLOOP.
+
+ENDIF.
+\`\`\`
+
+## Conclusion
+
+In the classic approach, processing every record sharing the same sap_no individually with two nested loops leads to unnecessary loop triggering and weakens the maintainability of the code.
+
+Using **GROUP BY** eliminates redundant loop iterations and makes the operation efficient, while determining the maximum **order_no** for each group in a single pass and updating subsequent records in a controlled way preserves data integrity.
+
+The result is code that is more readable, more performant, and more maintainable.
+    `,
+    },
+    tags: ["SAP ABAP", "GROUP BY", "REDUCE", "Performance"],
+    readTime: 6,
+    publishedAt: "2026-06-30",
+    coverImage: undefined,
+  },
 ];
 
 export type Experience = typeof experiences[number];
